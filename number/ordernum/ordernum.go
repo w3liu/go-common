@@ -10,6 +10,8 @@ import (
 
 var num int64
 
+//生成24位订单号
+//前面17位代表时间精确到毫秒，中间3位代表进程id，最后4位代表序号
 func Generate(t time.Time) string {
 	s := t.Format(timeformat.Continuity)
 	m := t.UnixNano()/1e6 - t.UnixNano()/1e9*1e3
@@ -23,6 +25,7 @@ func Generate(t time.Time) string {
 	return n
 }
 
+//对长度不足n的数字前面补0
 func sup(i int64, n int) string {
 	m := fmt.Sprintf("%d", i)
 	for len(m) < n {
