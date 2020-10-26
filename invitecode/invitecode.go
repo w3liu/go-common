@@ -59,8 +59,6 @@ func Decode(code string) uint64 {
 		for j := 0; j < r; j++ {
 			b *= DECIMAL
 		}
-		// pow 类型为 float64 , 类型转换太麻烦, 所以自己循环实现pow的功能
-		//res += float64(index) * math.Pow(float64(32), float64(2))
 		res += uint64(index) * b
 		r++
 	}

@@ -3,7 +3,7 @@ package invitecode
 import "testing"
 
 func TestEncode(t *testing.T) {
-	for i := 10000000000; i < 10000000100; i++ {
+	for i := 1; i < 100; i++ {
 		t.Log(Encode(uint64(i)))
 	}
 }
