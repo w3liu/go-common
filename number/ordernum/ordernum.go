@@ -20,7 +20,7 @@ func Generate(t time.Time) string {
 	ps := sup(int64(p), 3)
 	i := atomic.AddInt64(&num, 1)
 	r := i % 10000
-	rs := sup(int64(r), 4)
+	rs := sup(r, 4)
 	n := fmt.Sprintf("%s%s%s%s", s, ms, ps, rs)
 	return n
 }
