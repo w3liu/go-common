@@ -3,8 +3,8 @@ package log
 import "testing"
 
 func TestLog(t *testing.T) {
-	Logger.Info("hello")
-	Logger.Error("error")
-	Logger.Debug("debug")
-	Logger.Warn("warn")
+	L().Info("hello")
+	L().Error("error")
+	L().Debug("debug")
+	L().Warn("warn")
 }

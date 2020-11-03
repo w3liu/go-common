@@ -14,6 +14,8 @@ import (
 	"time"
 )
 
+var logger = log.L()
+
 type MgoConf struct {
 	User        string
 	Password    string
@@ -85,7 +87,7 @@ func (s *MgoStore) Cli() *mongo.Client {
 func (s *MgoStore) CloseCursor(ctx context.Context, cursor *mongo.Cursor) {
 	err := cursor.Close(ctx)
 	if err != nil {
-		log.Logger.Error("CloseCursor", zap.Error(err))
+		logger.Error("CloseCursor", zap.Error(err))
 	}
 }
 
