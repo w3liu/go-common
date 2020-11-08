@@ -5,10 +5,13 @@ import (
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 	"gopkg.in/natefinch/lumberjack.v2"
+	"sync"
 	"time"
 )
 
-var Logger *zap.Logger
+var _logger *zap.Logger
+
+var lock sync.Mutex
 
 type Env string
 
@@ -23,6 +26,14 @@ const (
 	EnvProduct Env = "product"
 	EnvDevelop Env = "develop"
 )
+
+func L() *zap.Logger {
+	return _logger
+}
+
+func Sync() error {
+	return _logger.Sync()
+}
 
 func (env gteDebug) Enabled(l zapcore.Level) bool {
 	return l >= zapcore.DebugLevel
@@ -57,7 +68,7 @@ func (env gteError) String() string {
 }
 
 func init() {
-	Logger = New(EnvDevelop)
+	_logger = New(EnvDevelop)
 }
 
 func New(env Env) *zap.Logger {
@@ -73,7 +84,14 @@ func New(env Env) *zap.Logger {
 	for i, _ := range enablers {
 		cores = append(cores, newCore(enablers[i]))
 	}
-	return zap.New(zapcore.NewTee(cores...), zap.AddCaller(), zap.AddStacktrace(zap.DPanicLevel))
+	logger := zap.New(zapcore.NewTee(cores...), zap.AddCaller(), zap.AddStacktrace(zap.DPanicLevel))
+	return logger
+}
+
+func ReplaceGlobal(logger *zap.Logger) {
+	lock.Lock()
+	_logger = logger
+	lock.Unlock()
 }
 
 func newCore(enabler zapcore.LevelEnabler) zapcore.Core {
@@ -107,7 +125,7 @@ func newEncoderConfig() zapcore.EncoderConfig {
 }
 
 func ISO8601TimeEncoder(t time.Time, enc zapcore.PrimitiveArrayEncoder) {
-	encodeTimeLayout(t, "2006-01-02 15:04:05.000Z0700", enc)
+	encodeTimeLayout(t, "2006-01-02 15:04:05.000", enc)
 }
 
 func encodeTimeLayout(t time.Time, layout string, enc zapcore.PrimitiveArrayEncoder) {
