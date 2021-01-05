@@ -27,10 +27,6 @@ const (
 	EnvDevelop Env = "develop"
 )
 
-func L() *zap.Logger {
-	return _logger
-}
-
 func Sync() error {
 	return _logger.Sync()
 }
@@ -84,7 +80,7 @@ func New(env Env) *zap.Logger {
 	for i, _ := range enablers {
 		cores = append(cores, newCore(enablers[i]))
 	}
-	logger := zap.New(zapcore.NewTee(cores...), zap.AddCaller(), zap.AddStacktrace(zap.DPanicLevel))
+	logger := zap.New(zapcore.NewTee(cores...), zap.AddCaller(), zap.AddCallerSkip(1), zap.AddStacktrace(zap.DPanicLevel))
 	return logger
 }
 
@@ -92,6 +88,22 @@ func ReplaceGlobal(logger *zap.Logger) {
 	lock.Lock()
 	_logger = logger
 	lock.Unlock()
+}
+
+func Debug(msg string, field ...zap.Field) {
+	_logger.Debug(msg, field...)
+}
+
+func Info(msg string, field ...zap.Field) {
+	_logger.Info(msg, field...)
+}
+
+func Warn(msg string, field ...zap.Field) {
+	_logger.Warn(msg, field...)
+}
+
+func Error(msg string, field ...zap.Field) {
+	_logger.Error(msg, field...)
 }
 
 func newCore(enabler zapcore.LevelEnabler) zapcore.Core {
