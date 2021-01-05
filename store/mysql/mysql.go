@@ -16,6 +16,7 @@ type Conf struct {
 	Password string
 	MaxConns int
 	MaxIdle  int
+	ShowSQL  bool
 }
 
 type Store struct {
@@ -39,7 +40,7 @@ func NewStore(cfg *Conf) *Store {
 	}
 	engine.SetMaxOpenConns(cfg.MaxConns)
 	engine.SetMaxIdleConns(cfg.MaxIdle)
-	engine.ShowSQL(false)
+	engine.ShowSQL(cfg.ShowSQL)
 	engine.SetConnMaxLifetime(time.Hour * 2)
 
 	return &Store{engine}
@@ -54,7 +55,7 @@ func NewQuery(cfg *Conf) *Query {
 	}
 	engine.SetMaxOpenConns(cfg.MaxConns)
 	engine.SetMaxIdleConns(cfg.MaxIdle)
-	engine.ShowSQL(false)
+	engine.ShowSQL(cfg.ShowSQL)
 	engine.SetConnMaxLifetime(time.Hour * 2)
 
 	return &Query{engine}

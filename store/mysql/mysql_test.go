@@ -21,6 +21,7 @@ func initStore() *Store {
 		Password: "111111",
 		MaxConns: 100,
 		MaxIdle:  10,
+		ShowSQL:  true,
 	}
 	store := NewStore(&cfg)
 	return store
