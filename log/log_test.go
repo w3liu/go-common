@@ -9,6 +9,10 @@ func TestLog(t *testing.T) {
 }
 
 func TestReplace(t *testing.T) {
-	ReplaceGlobal(New(EnvProduct))
-	ReplaceGlobal(New(EnvProduct))
+	if err := ReplaceGlobal(New(EnvProduct)); err != nil {
+		t.Fatal(err)
+	}
+	if err := ReplaceGlobal(New(EnvProduct)); err != nil {
+		t.Fatal(err)
+	}
 }

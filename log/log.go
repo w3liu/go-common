@@ -1,6 +1,7 @@
 package log
 
 import (
+	"errors"
 	"fmt"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
@@ -84,10 +85,16 @@ func New(env Env) *zap.Logger {
 	return logger
 }
 
-func ReplaceGlobal(logger *zap.Logger) {
+func ReplaceGlobal(logger *zap.Logger) error {
+	var isDo bool
 	once.Do(func() {
 		_logger = logger
+		isDo = true
 	})
+	if !isDo {
+		return errors.New("can not replace once more")
+	}
+	return nil
 }
 
 func Debug(msg string, field ...zap.Field) {
