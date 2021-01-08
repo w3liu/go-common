@@ -11,7 +11,7 @@ import (
 
 var _logger *zap.Logger
 
-var lock sync.Mutex
+var once sync.Once
 
 type Env string
 
@@ -85,9 +85,9 @@ func New(env Env) *zap.Logger {
 }
 
 func ReplaceGlobal(logger *zap.Logger) {
-	lock.Lock()
-	_logger = logger
-	lock.Unlock()
+	once.Do(func() {
+		_logger = logger
+	})
 }
 
 func Debug(msg string, field ...zap.Field) {
